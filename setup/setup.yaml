@@ -7,6 +7,37 @@ Resources:
     Properties:
       Description: "access to the health customer retention model"
       Name: "health-customer-retention"
+
+  v1ApiResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      RestApiId: 
+        Ref: "RetentionApi"
+      ParentId:
+        Fn::GetAtt: 
+          - "RetentionApi"
+          - "RootResourceId"
+      PathPart: "v1"
+
+  retentionApiResource:
+      Type: "AWS::ApiGateway::Resource"
+      Properties:
+        RestApiId: 
+          Ref: "RetentionApi"
+        ParentId:
+          Ref: "v1ApiResource"
+        PathPart: "retention"
+
+  calcHealthCustomerProbApiResource:
+      Type: "AWS::ApiGateway::Resource"
+      Properties:
+        RestApiId: 
+          Ref: "RetentionApi"
+        ParentId:
+          Ref: "retentionApiResource"
+        PathPart: "calculate-health-customer-probability"
+
+
 Outputs:
   StackName:
     Value: !Ref AWS::StackName
@@ -14,3 +45,6 @@ Outputs:
   RetentionApi:
     Value: !Ref RetentionApi
     Description: "Retention API ID"
+  v1ApiResource:
+    Value: !Ref v1ApiResource
+    Description: "V1 api resource id"
