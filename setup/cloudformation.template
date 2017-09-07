@@ -1,0 +1,22 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+
+	"Description" : "setup the api gateway",
+
+	"Parameters" : {
+	},
+
+	"Resources" : {
+		
+	  "Type" : "AWS::ApiGateway::RestApi",
+	  "Properties" : {  
+		"Description" : "Access to Customer Retention ",
+		"FailOnWarnings" : "FALSE",
+		"Name" : "customer-retention-probability"
+	  }
+
+	},
+
+	"Outputs" : {
+	}
+}

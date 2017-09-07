@@ -1,0 +1,16 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description : "api gateway for the health customer retention model"
+Resources:
+  RetentionApi:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Description: "access to the health customer retention model"
+      Name: "health-customer-retention"
+Outputs:
+  StackName:
+    Value: !Ref AWS::StackName
+    Description: "Stack Name"
+  RetentionApi:
+    Value: !Ref RetentionApi
+    Description: "Retention API ID"

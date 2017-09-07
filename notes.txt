@@ -1,0 +1,6 @@
+so we are going to run our R code with rpy2 
+
+We need to recompile the R code into Pyhon using rpy2
+
+we can run R in side Python with rpy2
+
