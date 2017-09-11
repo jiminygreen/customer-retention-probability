@@ -37,6 +37,59 @@ Resources:
           Ref: "retentionApiResource"
         PathPart: "calculate-health-customer-probability"
 
+  lambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:invokeFunction"
+      FunctionName: "arn:aws:lambda:us-east-1:431854676248:function:customer-retention"
+      Principal: "apigateway.amazonaws.com"
+      SourceAccount: 
+        Ref: "AWS::AccountId"
+
+
+  postCalculateHealthCustomerProbabilityMethod:
+    DependsOn: "lambdaPermission"
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: NONE
+      ApiKeyRequired: TRUE
+      HttpMethod: POST
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: "AWS_PROXY"
+        Uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:431854676248:function:customer-retention/invocations"
+        # Uri: Fn::Join
+        #   - ""
+        #   - "arn:aws:apigateway:us-east-1:lambda:path/"
+        #   - "2015-03-31/functions/"
+        #   Fn::GetAtt ["customer-retention", "Arn"]
+        #   - "/invocations"
+         # - "arn:aws:lambda:us-east-1:431854676248:function:customer-retention"
+# arn:aws:apigateway:region:lambda:path/{path}
+# {path} = /2015-03-31/functions/{LambdaFunctionARN}/invocations
+      ResourceId: !Ref calcHealthCustomerProbApiResource
+      RestApiId: !Ref RetentionApi
+
+  Deployment:
+    DependsOn: "postCalculateHealthCustomerProbabilityMethod"
+    Type: "AWS::ApiGateway::Deployment"
+    Properties: 
+      RestApiId: 
+        Ref: "RetentionApi"
+
+  UatStage:
+    Type: "AWS::ApiGateway::Stage"
+    Properties:
+      StageName: uat
+      Description: Uat stage
+      RestApiId: !Ref RetentionApi
+      DeploymentId: !Ref Deployment
+      MethodSettings:
+        - ResourcePath: /uat
+          HttpMethod: POST
+          MetricsEnabled: 'true'
+          DataTraceEnabled: 'true'
+          ThrottlingBurstLimit: '999'
 
 Outputs:
   StackName:
