@@ -43,12 +43,13 @@ Resources:
       Action: "lambda:invokeFunction"
       FunctionName: "arn:aws:lambda:us-east-1:431854676248:function:customer-retention"
       Principal: "apigateway.amazonaws.com"
-      SourceAccount: 
+      SourceAccount:
         Ref: "AWS::AccountId"
-
+      SourceArn: "arn:aws:execute-api:us-east-1:431854676248:65aowtoerj/*/POST/v1/retention/calculate-health-customer-probability"
+      #"Fn::GetAtt": ["RestApiAuthorizerRole", "Arn"]},
+    DependsOn: postCalculateHealthCustomerProbabilityMethod
 
   postCalculateHealthCustomerProbabilityMethod:
-    DependsOn: "lambdaPermission"
     Type: "AWS::ApiGateway::Method"
     Properties:
       AuthorizationType: NONE
@@ -56,7 +57,7 @@ Resources:
       HttpMethod: POST
       Integration:
         IntegrationHttpMethod: POST
-        Type: "AWS_PROXY"
+        Type: "AWS"
         Uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:431854676248:function:customer-retention/invocations"
         # Uri: Fn::Join
         #   - ""
@@ -67,6 +68,18 @@ Resources:
          # - "arn:aws:lambda:us-east-1:431854676248:function:customer-retention"
 # arn:aws:apigateway:region:lambda:path/{path}
 # {path} = /2015-03-31/functions/{LambdaFunctionARN}/invocations
+        IntegrationResponses:
+          -
+            StatusCode: 200
+            ResponseTemplates:
+              application/json: "$input.body"
+
+      MethodResponses:
+        - 
+          StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+      
       ResourceId: !Ref calcHealthCustomerProbApiResource
       RestApiId: !Ref RetentionApi
 
