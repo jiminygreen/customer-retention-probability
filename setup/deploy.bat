@@ -1,1 +1,1 @@
-aws cloudformation deploy --stack-name calc-health-retention-prob --template-file ./setup.yaml --profile personal
+aws cloudformation deploy --stack-name real5-calc-health-retention-prob --template-file ./setup.yaml --profile personal
