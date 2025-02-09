@@ -1,0 +1,16 @@
+{
+  "version": "2.3.0",
+  "summary": {
+    "title": "Databridge Events",
+    "owner": "Greg",
+    "description": "Once data Analysis is completed, events are sent to EventBridge to be published to customer endpoint",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [],
+    "diagramTop": 0,
+    "reviewer": "Greg",
+    "threatTop": 0
+  }
+}
